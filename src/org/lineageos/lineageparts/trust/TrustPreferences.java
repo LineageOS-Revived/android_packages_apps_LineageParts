@@ -21,6 +21,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.telephony.TelephonyManager;
 
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -240,7 +241,16 @@ public class TrustPreferences extends SettingsPreferenceFragment {
 
 
     private boolean isTelephony() {
-        PackageManager pm = getContext().getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+		PackageManager pm = getContext().getPackageManager();
+		if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+			TelephonyManager manager = (TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        	if(manager.getPhoneType() == TelephonyManager.PHONE_TYPE_NONE){
+            	return true;
+       		}else{
+            	return false;
+        	}
+		} else {
+			return false;
+		}
     }
 }
