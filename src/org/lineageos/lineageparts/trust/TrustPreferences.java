@@ -25,6 +25,7 @@ import android.telephony.TelephonyManager;
 
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.SwitchPreference;
 
@@ -37,6 +38,8 @@ import lineageos.trust.TrustInterface;
 
 public class TrustPreferences extends SettingsPreferenceFragment {
     private static final String TAG = "TrustPreferences";
+
+	private PreferenceScreen mTrustPref;
 
     private Preference mSELinuxPref;
     private Preference mSecurityPatchesPref;
@@ -60,6 +63,8 @@ public class TrustPreferences extends SettingsPreferenceFragment {
         mInterface = TrustInterface.getInstance(getContext());
 
         addPreferencesFromResource(R.xml.trust_preferences);
+
+		mTrustPref = findPreference("trust");
 
         mSELinuxPref = findPreference("trust_selinux");
         mSecurityPatchesPref = findPreference("trust_security_patch");
@@ -105,13 +110,18 @@ public class TrustPreferences extends SettingsPreferenceFragment {
         mWarnSELinuxPref.setChecked((currentFeatures & TrustInterface.TRUST_WARN_SELINUX) != 0);
         mWarnKeysPref.setChecked((currentFeatures & TrustInterface.TRUST_WARN_PUBLIC_KEY) != 0);
 
-        if (!isTelephony()) {
+        if (isTelephony()) {
             mToolsCategory.removePreference(mSmsLimitPref);
         }
 
         if (!mInterface.hasUsbRestrictor()) {
             mToolsCategory.removePreference(mUsbRestrictorPref);
         }
+		
+		if (!mInterface.hasUsbRestrictor() && isTelephony()) {
+			mTrustPref.removePreference(mToolsCategory);
+		}
+		
     }
 
     private void setupSELinux(int level) {
