@@ -30,6 +30,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.SwitchPreference;
 
 import org.lineageos.lineageparts.R;
+import org.lineageos.lineageparts.utils.DeviceUtils;
 import org.lineageos.lineageparts.SettingsPreferenceFragment;
 
 import lineageos.preference.LineageSecureSettingSwitchPreference;
@@ -110,17 +111,17 @@ public class TrustPreferences extends SettingsPreferenceFragment {
         mWarnSELinuxPref.setChecked((currentFeatures & TrustInterface.TRUST_WARN_SELINUX) != 0);
         mWarnKeysPref.setChecked((currentFeatures & TrustInterface.TRUST_WARN_PUBLIC_KEY) != 0);
 
-        if (isTelephony()) {
+        if (!DeviceUtils.deviceSupportsMobileData(getContext())) {
             mToolsCategory.removePreference(mSmsLimitPref);
         }
 
-        if (!mInterface.hasUsbRestrictor()) {
+        if (!mInterface.hasUsbRestrictor() && !DeviceUtils.isLockScreenSecurityEnabled(getContext())) {
             mToolsCategory.removePreference(mUsbRestrictorPref);
         }
-		
-		if (!mInterface.hasUsbRestrictor() && isTelephony()) {
-			mTrustPref.removePreference(mToolsCategory);
-		}
+
+        if (mToolsCategory != null && mToolsCategory.getPreferenceCount() == 0) {
+            mTrustPref.removePreference(mToolsCategory);
+        }
 		
     }
 
@@ -249,18 +250,4 @@ public class TrustPreferences extends SettingsPreferenceFragment {
         return success;
     }
 
-
-    private boolean isTelephony() {
-		PackageManager pm = getContext().getPackageManager();
-		if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
-			TelephonyManager manager = (TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        	if(manager.getPhoneType() == TelephonyManager.PHONE_TYPE_NONE){
-            	return true;
-       		}else{
-            	return false;
-        	}
-		} else {
-			return false;
-		}
-    }
 }

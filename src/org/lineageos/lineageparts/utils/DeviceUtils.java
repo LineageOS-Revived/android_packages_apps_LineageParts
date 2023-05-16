@@ -20,6 +20,7 @@ import static android.view.WindowManagerPolicyConstants.NAV_BAR_MODE_2BUTTON;
 import static android.view.WindowManagerPolicyConstants.NAV_BAR_MODE_GESTURAL;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -192,8 +193,8 @@ public class DeviceUtils {
         return !TextUtils.isEmpty(name);
     }
 
-    public static boolean deviceSupportsMobileData(Context ctx) {
-        ConnectivityManager cm = ctx.getSystemService(ConnectivityManager.class);
+    public static boolean deviceSupportsMobileData(Context context) {
+        ConnectivityManager cm = context.getSystemService(ConnectivityManager.class);
         return cm.isNetworkSupported(ConnectivityManager.TYPE_MOBILE);
     }
 
@@ -201,12 +202,17 @@ public class DeviceUtils {
         return (BluetoothAdapter.getDefaultAdapter() != null);
     }
 
-    public static boolean deviceSupportsNfc(Context ctx) {
-        return NfcAdapter.getDefaultAdapter(ctx) != null;
+    public static boolean deviceSupportsNfc(Context context) {
+        return NfcAdapter.getDefaultAdapter(context) != null;
     }
 
     public static boolean deviceSupportsFlashLight(Context context) {
         return context.getSystemService(PackageManager.FEATURE_CAMERA_FLASH) != null;
+    }
+    
+    public static boolean isLockScreenSecurityEnabled(Context context) {
+        KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        return keyguardManager.isKeyguardSecure();
     }
 
     public static boolean isSwipeUpEnabled(Context context) {
