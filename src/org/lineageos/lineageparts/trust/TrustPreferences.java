@@ -115,7 +115,9 @@ public class TrustPreferences extends SettingsPreferenceFragment {
             mToolsCategory.removePreference(mSmsLimitPref);
         }
 
-        if (!mInterface.hasUsbRestrictor() && !DeviceUtils.isLockScreenSecurityEnabled(getContext())) {
+        mUsbRestrictorPref.setEnabled(!DeviceUtils.isLockScreenSecurityEnabled(getContext()));
+        
+        if (!mInterface.hasUsbRestrictor()) {
             mToolsCategory.removePreference(mUsbRestrictorPref);
         }
 
