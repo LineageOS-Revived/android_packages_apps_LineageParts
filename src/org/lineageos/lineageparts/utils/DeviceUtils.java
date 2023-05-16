@@ -206,24 +206,7 @@ public class DeviceUtils {
     }
 
     public static boolean deviceSupportsFlashLight(Context context) {
-        CameraManager cameraManager = context.getSystemService(CameraManager.class);
-        try {
-            String[] ids = cameraManager.getCameraIdList();
-            for (String id : ids) {
-                CameraCharacteristics c = cameraManager.getCameraCharacteristics(id);
-                Boolean flashAvailable = c.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-                Integer lensFacing = c.get(CameraCharacteristics.LENS_FACING);
-                if (flashAvailable != null
-                        && flashAvailable
-                        && lensFacing != null
-                        && lensFacing == CameraCharacteristics.LENS_FACING_BACK) {
-                    return true;
-                }
-            }
-        } catch (CameraAccessException | AssertionError e) {
-            // Ignore
-        }
-        return false;
+        return context.getSystemService(PackageManager.FEATURE_CAMERA_FLASH) != null;
     }
 
     public static boolean isSwipeUpEnabled(Context context) {
