@@ -40,7 +40,7 @@ import lineageos.trust.TrustInterface;
 public class TrustPreferences extends SettingsPreferenceFragment {
     private static final String TAG = "TrustPreferences";
 
-	private PreferenceScreen mTrustPref;
+    private PreferenceScreen mTrustPref;
 
     private Preference mSELinuxPref;
     private Preference mSecurityPatchesPref;
@@ -65,7 +65,7 @@ public class TrustPreferences extends SettingsPreferenceFragment {
 
         addPreferencesFromResource(R.xml.trust_preferences);
 
-		mTrustPref = findPreference("trust");
+        mTrustPref = findPreference("trust");
 
         mSELinuxPref = findPreference("trust_selinux");
         mSecurityPatchesPref = findPreference("trust_security_patch");
@@ -116,7 +116,7 @@ public class TrustPreferences extends SettingsPreferenceFragment {
         }
 
         mUsbRestrictorPref.setEnabled(!DeviceUtils.isLockScreenSecurityEnabled(getContext()));
-        
+
         if (!mInterface.hasUsbRestrictor()) {
             mToolsCategory.removePreference(mUsbRestrictorPref);
         }
